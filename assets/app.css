@@ -1,0 +1,59 @@
+/* White Lotus Florist — layout concept: a florist's cooler door. Flower "cards" pinned in a grid,
+   a selection tray that follows you, and bouquet tags set in a high-contrast serif. */
+:root{
+  --bg:#F3F5F0; --surface:#FFFFFF; --sunk:#E7ECE4; --ink:#1F2A22; --muted:#5A675D; --line:#D5DDD2;
+  --accent:#A32A63; --accent-ink:#FFFFFF; --accent-soft:#F6E3EC; --leaf:#3E6B45; --ok:#2F7A46; --warn:#9A5B00; --danger:#B3261E;
+  --paper:#E8D8C3; --paper-edge:#D3BFA4; --ribbon:#A32A63; --glass:rgba(190,215,220,.45); --glass-edge:rgba(90,130,140,.6); --water:rgba(150,195,205,.45); --leaf-fill:#5F8C57;
+  --display:"Bodoni Moda", "Didot", Georgia, serif;
+  --body:"Karla", "Helvetica Neue", Arial, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121815; --surface:#1A221D; --sunk:#232D27; --ink:#E7ECE5; --muted:#9EAA9F; --line:#2F3B33;
+  --accent:#EE8DBA; --accent-ink:#2A0B19; --accent-soft:#3A1F2C; --leaf:#93C196; --ok:#7FCB95; --warn:#F0B35A; --danger:#FF8A80;
+  --paper:#5C4E3E; --paper-edge:#4A3E31; --ribbon:#EE8DBA; --glass:rgba(140,180,190,.22); --glass-edge:rgba(170,210,220,.45); --water:rgba(120,170,185,.3); --leaf-fill:#5E8A57;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121815; --surface:#1A221D; --sunk:#232D27; --ink:#E7ECE5; --muted:#9EAA9F; --line:#2F3B33;
+  --accent:#EE8DBA; --accent-ink:#2A0B19; --accent-soft:#3A1F2C; --leaf:#93C196; --ok:#7FCB95; --warn:#F0B35A; --danger:#FF8A80;
+  --paper:#5C4E3E; --paper-edge:#4A3E31; --ribbon:#EE8DBA; --glass:rgba(140,180,190,.22); --glass-edge:rgba(170,210,220,.45); --water:rgba(120,170,185,.3); --leaf-fill:#5E8A57;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+img{max-width:100%}
+[hidden]{display:none!important}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:16px;padding-block:20px 140px}
+h1,h2,h3{font-family:var(--display);font-weight:500;margin:0;line-height:1.1;text-wrap:balance}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.label{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+p{margin:0}
+
+.btn{border:1px solid var(--line);background:var(--surface);padding:10px 18px;border-radius:999px;cursor:pointer;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;color:var(--ink);min-height:44px}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.small{padding:6px 12px;min-height:34px;font-size:.88rem}
+.btn.danger{color:var(--danger)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+.field{display:grid;gap:5px;min-width:0}
+.field input,.field select,.field textarea{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;min-height:44px}
+.field textarea{min-height:80px;resize:vertical}
+.err{color:var(--danger);font-size:.92rem}
+.notice{background:var(--accent-soft);border-radius:12px;padding:12px 14px;font-size:.95rem}
+
+/* bouquet preview */
+.preview{position:relative;aspect-ratio:4/5;max-width:100%;width:100%;background:radial-gradient(ellipse at 50% 34%,var(--accent-soft),transparent 70%);overflow:hidden}
+.preview .base{position:absolute;inset:0;width:100%;height:100%}
+.preview .bloom{position:absolute;aspect-ratio:1/1;border-radius:50%;overflow:hidden;border:2px solid var(--surface);box-shadow:0 2px 6px rgb(0 0 0/.22)}
+.preview .bloom img{width:100%;height:100%;object-fit:cover;display:block}
+.preview .leaf{position:absolute;width:15%;aspect-ratio:1/2.4;background:var(--leaf-fill);border-radius:50% 50% 50% 50%/70% 70% 30% 30%;opacity:.9}
+.preview.posy .base{top:10%}
+.preview.vase .base{top:-6%}
+@media (prefers-reduced-motion:no-preference){.preview .bloom{transition:transform .25s ease}.preview:hover .bloom{transform:scale(1.03)}}

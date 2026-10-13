@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>White Lotus Florist · Owner Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;1,6..96,400;1,6..96,600&family=Karla:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/app.css">
+<style>
+.top{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.top h1{font-size:1.7rem;font-style:italic;font-weight:400}
+.top .row{display:flex;gap:8px;flex-wrap:wrap}
+.tabs{display:flex;gap:4px;background:var(--sunk);padding:4px;border-radius:999px;margin-block:18px;overflow-x:auto;scrollbar-width:none}
+.tabs button{border:0;background:transparent;padding:9px 14px;border-radius:999px;cursor:pointer;font-weight:600;color:var(--muted);white-space:nowrap;min-height:40px}
+.tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgb(0 0 0/.12)}
+.badge{display:inline-block;background:var(--accent);color:var(--accent-ink);border-radius:999px;font-size:.72rem;padding:1px 7px;margin-left:4px;font-family:var(--mono)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;display:grid;gap:14px;margin-bottom:16px}
+.panel h2{font-size:1.5rem;font-style:italic;font-weight:400}
+.hint{color:var(--muted);font-size:.92rem;max-width:68ch}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;align-items:end}
+.daily{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.daily b{font-family:var(--mono)}
+
+.photo-pick{display:flex;gap:12px;align-items:center;flex-wrap:wrap;grid-column:1/-1}
+.thumb{width:84px;height:84px;border-radius:12px;background:var(--sunk);overflow:hidden;flex:none;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.8rem;text-align:center}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.filebtn{position:relative;overflow:hidden}
+.filebtn input{position:absolute;inset:0;opacity:0;cursor:pointer}
+
+.flist{display:grid;gap:10px}
+.frow{display:grid;grid-template-columns:72px minmax(0,1fr);gap:12px;padding:10px;border-radius:12px;background:var(--bg);border:1px solid var(--line)}
+.frow.off{opacity:.62}
+.frow .ph{position:relative;width:72px;height:72px;border-radius:10px;overflow:hidden}
+.frow .ph img{width:100%;height:100%;object-fit:cover;display:block}
+.frow .ph label{position:absolute;inset:auto 0 0 0;background:rgb(0 0 0/.55);color:#fff;font-size:.68rem;text-align:center;padding:2px 0;cursor:pointer}
+.frow .ph input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.fields{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) minmax(0,.9fr);gap:8px;align-items:center}
+.fields input,.fields select{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:7px 9px;width:100%;min-height:38px}
+.money{position:relative}
+.money span{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--muted);font-family:var(--mono);pointer-events:none}
+.money input{padding-left:20px;font-family:var(--mono)}
+.factions{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between;grid-column:1/-1}
+.switch{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-weight:600;font-size:.92rem}
+.switch input{appearance:none;width:44px;height:26px;border-radius:999px;background:var(--line);position:relative;cursor:pointer;transition:background .15s;flex:none;margin:0}
+.switch input::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--surface);box-shadow:0 1px 2px rgb(0 0 0/.3);transition:left .15s}
+.switch input:checked{background:var(--ok)}
+.switch input:checked::after{left:21px}
+.saved{font-size:.82rem;color:var(--ok)}
+
+.slist{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.scard{border:1px solid var(--line);border-radius:14px;background:var(--bg);overflow:hidden;display:grid}
+.scard .preview{max-width:220px;margin:0 auto}
+.scard .body{padding:12px 14px 14px;display:grid;gap:10px}
+.scard .calc{font-size:.88rem;color:var(--muted)}
+.scard .calc b{font-family:var(--mono);color:var(--ink)}
+
+.olist{display:grid;gap:10px}
+.ord{border:1px solid var(--line);border-left-width:4px;border-radius:12px;padding:12px 14px;background:var(--bg);display:grid;gap:6px}
+.ord.new{border-left-color:var(--accent)}
+.ord.confirmed{border-left-color:var(--warn)}
+.ord.done{border-left-color:var(--ok)}
+.ord.cancelled{border-left-color:var(--line);opacity:.7}
+.ord .head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 12px;align-items:baseline}
+.ord .who{font-weight:700;font-size:1.05rem}
+.ord .phone{font-family:var(--mono);user-select:all}
+.ord select{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 8px;min-height:36px}
+.login{max-width:400px;margin:8vh auto 0;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;display:grid;gap:14px}
+.login h1{font-size:2rem;font-style:italic;font-weight:400}
+.check{display:flex;gap:8px;align-items:center;font-size:.92rem}
+.toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-size:.92rem;z-index:20;max-width:calc(100% - 32px)}
+@media (max-width:560px){.fields{grid-template-columns:1fr 1fr}.fields .nmf{grid-column:1/-1}}
+</style>
+</head>
+<body>
+<main class="wrap" id="app"></main>
+<div class="toast" id="toast" role="status" hidden></div>
+<script src="assets/shared.js"></script>
+<script>
+(function(){
+const {rpc, COLORS, esc, money, photo, recipe, preview} = WL;
+const KINDS = {posy:'Round posy', handtied:'Hand-tied & wrapped', vase:'In a vase'};
+const app = document.getElementById('app');
+let pass = '', data = null, tab = 'flowers', loginErr = '', busy = false, draft = {name:'', color:'Pink', price:'', photo:null}, confirmDel = null;
+
+function store(k, v){ try{ v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); }catch(_){} }
+function stored(k){ try{ return localStorage.getItem(k) || sessionStorage.getItem(k); }catch(_){ return null; } }
+function sstore(k, v){ try{ v == null ? sessionStorage.removeItem(k) : sessionStorage.setItem(k, v); }catch(_){} }
+
+let toastT;
+function toast(msg){ const t = document.getElementById('toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 2600); }
+
+async function call(fn, args){
+  try{ return await rpc(fn, Object.assign({p: pass}, args || {})); }
+  catch(e){
+    if (/wrong passcode|too many/i.test(e.message)){ pass = ''; store('wl_pass', null); sstore('wl_pass', null); data = null; loginErr = e.message; render(); }
+    else toast(e.message);
+    throw e;
+  }
+}
+async function reload(){ data = await call('owner_load'); render(); }
+
+function compress(file){ return new Promise((res, rej) => {
+  const r = new FileReader(); r.onerror = rej;
+  r.onload = () => { const im = new Image(); im.onerror = () => rej(new Error('That file is not a photo we can read. Try a JPG or PNG.'));
+    im.onload = () => { const max = 480, s = Math.min(1, max / Math.max(im.width, im.height)); const c = document.createElement('canvas');
+      c.width = Math.round(im.width * s); c.height = Math.round(im.height * s); c.getContext('2d').drawImage(im, 0, 0, c.width, c.height);
+      res(c.toDataURL('image/jpeg', .74)); };
+    im.src = r.result; };
+  r.readAsDataURL(file); }); }
+
+/* ---------- views ---------- */
+function render(){
+  if (!data){ app.innerHTML = loginView(); const el = document.getElementById('pass'); if (el) el.focus(); return; }
+  const newCount = data.orders.filter(o => o.status === 'new').length;
+  app.innerHTML = '<header class="top"><div><span class="label">Owner dashboard</span><h1>' + esc(data.settings.shop_name) + '</h1></div>'
+    + '<div class="row"><a class="btn small" href="./" target="_blank" rel="noopener">View customer page</a><button class="btn small" data-act="logout">Sign out</button></div></header>'
+    + '<nav class="tabs" role="tablist">' + [['flowers','Today\'s flowers'],['styles','Bouquet styles & prices'],['orders','Orders' + (newCount ? '<span class="badge">' + newCount + '</span>' : '')],['settings','Shop settings']]
+      .map(([k, l]) => '<button role="tab" data-tab="' + k + '" aria-selected="' + (tab === k) + '">' + l + '</button>').join('') + '</nav>'
+    + ({flowers: flowersView, styles: stylesView, orders: ordersView, settings: settingsView}[tab])();
+}
+function loginView(){
+  return '<form class="login" id="loginForm"><span class="label">White Lotus Florist</span><h1>Owner sign-in</h1>'
+    + '<div class="field"><label class="label" for="pass">Passcode</label><input id="pass" type="password" autocomplete="current-password" required></div>'
+    + '<label class="check"><input type="checkbox" id="remember" checked> Keep me signed in on this device</label>'
+    + (loginErr ? '<p class="err" role="alert">' + esc(loginErr) + '</p>' : '')
+    + '<button class="btn primary" type="submit"' + (busy ? ' disabled' : '') + '>' + (busy ? 'Signing in…' : 'Sign in') + '</button></form>';
+}
+function colorOptions(sel){ return Object.keys(COLORS).map(c => '<option' + (c === sel ? ' selected' : '') + '>' + c + '</option>').join(''); }
+
+function flowersView(){
+  const fl = data.flowers, on = fl.filter(f => f.available).length;
+  let h = '<section class="panel"><div class="daily"><p><b>' + on + '</b> of <b>' + fl.length + '</b> flowers are showing to customers today.</p>'
+    + '<div class="row" style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn small" data-act="allon">Show all</button><button class="btn small" data-act="alloff">Hide all (start a new day)</button></div></div>'
+    + '<p class="hint">Each morning, tap <b>Hide all</b>, then switch on what came in fresh. Retake a photo any time by tapping it.</p></section>';
+  h += '<section class="panel"><h2>Add a flower</h2><div class="grid">'
+    + '<div class="photo-pick"><div class="thumb">' + (draft.photo ? '<img alt="" src="' + draft.photo + '">' : 'No photo') + '</div>'
+    + '<label class="btn filebtn">' + (draft.photo ? 'Retake photo' : 'Take or choose photo') + '<input id="newPhoto" type="file" accept="image/*" capture="environment"></label></div>'
+    + '<div class="field"><label class="label" for="n-name">Flower name</label><input id="n-name" placeholder="Garden Rose" value="' + esc(draft.name) + '"></div>'
+    + '<div class="field"><label class="label" for="n-color">Color</label><select id="n-color">' + colorOptions(draft.color) + '</select></div>'
+    + '<div class="field"><label class="label" for="n-price">Price per stem</label><div class="money"><span>$</span><input id="n-price" type="number" min="0" step="0.25" inputmode="decimal" placeholder="4.50" value="' + esc(draft.price) + '" style="background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px 10px 22px;width:100%;min-height:44px"></div></div>'
+    + '<button class="btn primary" data-act="add"' + (busy ? ' disabled' : '') + '>Add to today\'s flowers</button></div></section>';
+  h += '<section class="panel"><h2>Your flowers</h2>';
+  if (!fl.length) h += '<p class="hint">No flowers yet. Add your first one above. Customers see a "check back soon" message until you do.</p>';
+  h += '<div class="flist">' + fl.map(f => '<div class="frow' + (f.available ? '' : ' off') + '" data-id="' + f.id + '">'
+    + '<div class="ph"><img alt="" src="' + photo(f) + '"><label for="ph-' + f.id + '">' + (f.photo ? 'Change' : 'Add photo') + '</label><input id="ph-' + f.id + '" type="file" accept="image/*" capture="environment" data-photo="' + f.id + '" aria-label="Change photo of ' + esc(f.name) + '"></div>'
+    + '<div class="fields"><input class="nmf" data-k="name" value="' + esc(f.name) + '" aria-label="Flower name">'
+    + '<select data-k="color" aria-label="Color">' + colorOptions(f.color) + '</select>'
+    + '<div class="money"><span>$</span><input data-k="price" type="number" min="0" step="0.25" inputmode="decimal" value="' + Number(f.price) + '" aria-label="Price per stem"></div>'
+    + '<div class="factions"><label class="switch"><input type="checkbox" data-k="available"' + (f.available ? ' checked' : '') + '> ' + (f.available ? 'Showing today' : 'Hidden') + '</label>'
+    + (confirmDel === f.id ? '<span><button class="btn small danger" data-act="delf" data-id="' + f.id + '">Yes, delete</button> <button class="btn small" data-act="nodel">Keep</button></span>' : '<button class="btn small" data-act="askdel" data-id="' + f.id + '">Delete</button>')
+    + '</div></div></div>').join('') + '</div></section>';
+  return h;
+}
+
+function sampleFlowers(){ const a = data.flowers.filter(f => f.available); return (a.length ? a : data.flowers).slice(0, 3); }
+function stylesView(){
+  const sample = sampleFlowers();
+  let h = '<section class="panel"><h2>Bouquet styles & prices</h2><p class="hint">Customers see every style that is switched on, made from the flowers they pick. '
+    + '<b>Customer price = stems × each flower\'s per-stem price + the style price</b>, rounded up to the dollar. Change any number and tap Save.</p></section>';
+  h += '<div class="slist">' + data.styles.map(s => {
+    const r = sample.length ? recipe(s, sample) : null;
+    return '<article class="scard" data-sid="' + s.id + '">' + (r ? preview(s.kind, r.items) : '') + '<div class="body">'
+      + '<div class="field"><label class="label">Style name</label><input data-k="name" value="' + esc(s.name) + '"></div>'
+      + '<div class="field"><label class="label">Shape</label><select data-k="kind">' + Object.entries(KINDS).map(([k, l]) => '<option value="' + k + '"' + (k === s.kind ? ' selected' : '') + '>' + l + '</option>').join('') + '</select></div>'
+      + '<div class="field"><label class="label">Description for customers</label><textarea data-k="description">' + esc(s.description) + '</textarea></div>'
+      + '<div class="grid"><div class="field"><label class="label">Number of stems</label><input data-k="stems" type="number" min="1" max="200" step="1" inputmode="numeric" value="' + s.stems + '"></div>'
+      + '<div class="field"><label class="label">Style price (wrap, vase, labor)</label><div class="money"><span>$</span><input data-k="fee" type="number" min="0" step="0.5" inputmode="decimal" value="' + Number(s.fee) + '" style="background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px 10px 22px;width:100%;min-height:44px"></div></div></div>'
+      + (r ? '<p class="calc">Example with ' + esc(sample.map(f => f.name).join(', ')) + ': <b>' + money(r.total) + '</b></p>' : '')
+      + '<div class="factions"><label class="switch"><input type="checkbox" data-k="active"' + (s.active ? ' checked' : '') + '> ' + (s.active ? 'Offered' : 'Not offered') + '</label>'
+      + '<span style="display:flex;gap:8px;flex-wrap:wrap">' + (confirmDel === s.id ? '<button class="btn small danger" data-act="dels" data-id="' + s.id + '">Yes, delete</button><button class="btn small" data-act="nodel">Keep</button>' : '<button class="btn small" data-act="askdel" data-id="' + s.id + '">Delete</button>')
+      + '<button class="btn small primary" data-act="saves" data-id="' + s.id + '">Save</button></span></div></div></article>';
+  }).join('') + '</div><p style="margin-top:16px"><button class="btn" data-act="adds">Add another style</button></p>';
+  return h;
+}
+
+function ordersView(){
+  const o = data.orders;
+  let h = '<section class="panel"><div class="daily"><h2>Orders</h2><button class="btn small" data-act="refresh">Check for new orders</button></div>'
+    + '<p class="hint">Every order also goes to <b>' + esc(data.settings.email) + '</b>. Call the customer to confirm, then update the status.</p>';
+  if (!o.length) return h + '<p class="hint">No orders yet. They appear here as soon as a customer sends one.</p></section>';
+  h += '<div class="olist">' + o.map(x => {
+    const when = new Date(x.created_at).toLocaleString([], {month:'short', day:'numeric', hour:'numeric', minute:'2-digit'});
+    return '<div class="ord ' + x.status + '"><div class="head"><span class="who">' + esc(x.customer_name) + '</span><span class="mono muted">' + when + '</span></div>'
+      + '<span class="phone">' + esc(x.customer_phone) + '</span>'
+      + '<span><b>' + esc(x.style_name) + '</b> · <span class="mono">' + money(x.total) + '</span></span>'
+      + '<span class="muted">' + (x.items || []).map(i => i.stems + ' ' + esc(i.name)).join(' · ') + '</span>'
+      + (x.needed_by ? '<span>Needed by: <b>' + esc(x.needed_by) + '</b></span>' : '')
+      + (x.note ? '<span>Note: ' + esc(x.note) + '</span>' : '')
+      + '<label class="check">Status <select data-order="' + x.id + '">' + ['new','confirmed','done','cancelled'].map(s => '<option value="' + s + '"' + (s === x.status ? ' selected' : '') + '>' + ({new:'New',confirmed:'Confirmed',done:'Picked up / delivered',cancelled:'Cancelled'})[s] + '</option>').join('') + '</select></label></div>';
+  }).join('') + '</div></section>';
+  return h;
+}
+
+function settingsView(){
+  const s = data.settings;
+  return '<section class="panel"><h2>Shop details</h2><p class="hint">Customers see the shop name, note and phone number. Orders are emailed to the order email.</p><div class="grid">'
+    + '<div class="field"><label class="label" for="s-name">Shop name</label><input id="s-name" value="' + esc(s.shop_name) + '"></div>'
+    + '<div class="field"><label class="label" for="s-phone">Shop phone</label><input id="s-phone" type="tel" value="' + esc(s.phone) + '" placeholder="(555) 555-0123"></div>'
+    + '<div class="field"><label class="label" for="s-email">Order email</label><input id="s-email" type="email" value="' + esc(s.email) + '"></div>'
+    + '<div class="field"><label class="label" for="s-max">Most flowers a customer can pick</label><input id="s-max" type="number" min="1" max="8" value="' + s.max_flowers + '"></div>'
+    + '<div class="field" style="grid-column:1/-1"><label class="label" for="s-note">Welcome note</label><textarea id="s-note">' + esc(s.note) + '</textarea></div>'
+    + '<button class="btn primary" data-act="savesettings">Save shop details</button></div></section>'
+    + '<section class="panel"><h2>Change passcode</h2><div class="grid">'
+    + '<div class="field"><label class="label" for="p1">New passcode</label><input id="p1" type="password" autocomplete="new-password"></div>'
+    + '<div class="field"><label class="label" for="p2">Type it again</label><input id="p2" type="password" autocomplete="new-password"></div>'
+    + '<button class="btn" data-act="passcode">Change passcode</button></div><p class="hint">At least 8 characters. You\'ll need it on every device you sign in from.</p></section>';
+}
+
+/* ---------- actions ---------- */
+function rowFlower(row){
+  const f = Object.assign({}, data.flowers.find(x => x.id === row.dataset.id));
+  row.querySelectorAll('[data-k]').forEach(el => { const k = el.dataset.k; f[k] = el.type === 'checkbox' ? el.checked : el.value; });
+  f.price = Math.max(0, Number(f.price) || 0); delete f.photo; return f;
+}
+async function saveFlower(f, msg){
+  await call('owner_save_flower', {f}); const i = data.flowers.findIndex(x => x.id === f.id);
+  if (i >= 0) data.flowers[i] = Object.assign(data.flowers[i], f); toast(msg || 'Saved');
+}
+
+app.addEventListener('submit', async e => {
+  if (e.target.id !== 'loginForm') return; e.preventDefault();
+  const p = document.getElementById('pass').value, remember = document.getElementById('remember').checked;
+  busy = true; loginErr = ''; pass = p; render();
+  try{ data = await rpc('owner_load', {p}); if (remember) store('wl_pass', p); else sstore('wl_pass', p); }
+  catch(err){ pass = ''; loginErr = /wrong/i.test(err.message) ? 'That passcode isn\'t right. Try again.' : err.message; }
+  busy = false; render();
+});
+
+app.addEventListener('click', async e => {
+  const t = e.target.closest('[data-tab],[data-act]'); if (!t) return;
+  if (t.dataset.tab){ tab = t.dataset.tab; confirmDel = null; render(); if (tab === 'orders') reload().catch(() => {}); return; }
+  const a = t.dataset.act, id = t.dataset.id;
+  try{
+    switch (a){
+      case 'logout': pass = ''; data = null; store('wl_pass', null); sstore('wl_pass', null); render(); break;
+      case 'allon': case 'alloff': await call('owner_set_all_available', {val: a === 'allon'}); data.flowers.forEach(f => f.available = a === 'allon'); render(); toast(a === 'allon' ? 'All flowers showing' : 'All flowers hidden. Switch on today\'s.'); break;
+      case 'add': {
+        draft.name = document.getElementById('n-name').value.trim(); draft.color = document.getElementById('n-color').value; draft.price = document.getElementById('n-price').value;
+        if (!draft.name){ toast('Give the flower a name first.'); return; }
+        busy = true; render();
+        try{ await call('owner_save_flower', {f: {name: draft.name, color: draft.color, price: Math.max(0, Number(draft.price) || 0), photo: draft.photo, available: true, sort: 0}}); draft = {name:'', color: draft.color, price:'', photo:null}; await reload(); toast('Added to today\'s flowers'); }
+        finally{ busy = false; render(); }
+        break; }
+      case 'askdel': confirmDel = id; render(); break;
+      case 'nodel': confirmDel = null; render(); break;
+      case 'delf': await call('owner_delete_flower', {fid: id}); data.flowers = data.flowers.filter(f => f.id !== id); confirmDel = null; render(); toast('Flower deleted'); break;
+      case 'dels': await call('owner_delete_style', {sid: id}); data.styles = data.styles.filter(s => s.id !== id); confirmDel = null; render(); toast('Style deleted'); break;
+      case 'saves': {
+        const card = t.closest('[data-sid]'), s = Object.assign({}, data.styles.find(x => x.id === id));
+        card.querySelectorAll('[data-k]').forEach(el => { const k = el.dataset.k; s[k] = el.type === 'checkbox' ? el.checked : el.value; });
+        s.stems = Math.min(200, Math.max(1, parseInt(s.stems, 10) || 1)); s.fee = Math.max(0, Number(s.fee) || 0);
+        if (!String(s.name).trim()){ toast('Give the style a name.'); return; }
+        await call('owner_save_style', {s}); Object.assign(data.styles.find(x => x.id === id), s); render(); toast('Style saved'); break; }
+      case 'adds': await call('owner_save_style', {s: {kind:'posy', name:'New Style', description:'', stems:12, fee:10, active:false, sort: data.styles.length + 1}}); await reload(); toast('Style added. Edit it, switch it on and save.'); break;
+      case 'refresh': await reload(); toast('Orders updated'); break;
+      case 'savesettings': {
+        const s = {shop_name: document.getElementById('s-name').value.trim() || 'White Lotus Florist', phone: document.getElementById('s-phone').value.trim(),
+          email: document.getElementById('s-email').value.trim(), note: document.getElementById('s-note').value.trim(), max_flowers: Math.min(8, Math.max(1, parseInt(document.getElementById('s-max').value, 10) || 4))};
+        if (!/^\S+@\S+\.\S+$/.test(s.email)){ toast('Enter a valid order email.'); return; }
+        await call('owner_save_settings', {s}); data.settings = Object.assign(data.settings, s); render(); toast('Shop details saved'); break; }
+      case 'passcode': {
+        const p1 = document.getElementById('p1').value, p2 = document.getElementById('p2').value;
+        if (p1.length < 8){ toast('Use at least 8 characters.'); return; }
+        if (p1 !== p2){ toast('The two passcodes don\'t match.'); return; }
+        await call('owner_change_passcode', {newp: p1}); let kept = false; try{ kept = !!localStorage.getItem('wl_pass'); }catch(_){}
+        pass = p1; if (kept) store('wl_pass', p1); else sstore('wl_pass', p1);
+        document.getElementById('p1').value = document.getElementById('p2').value = ''; toast('Passcode changed'); break; }
+    }
+  }catch(_){ /* message already shown */ }
+});
+
+app.addEventListener('change', async e => {
+  const el = e.target;
+  try{
+    if (el.id === 'newPhoto' && el.files[0]){
+      draft.name = document.getElementById('n-name').value; draft.color = document.getElementById('n-color').value; draft.price = document.getElementById('n-price').value;
+      draft.photo = await compress(el.files[0]); render(); return;
+    }
+    if (el.dataset.photo && el.files[0]){
+      const f = rowFlower(el.closest('.frow')); f.photo = await compress(el.files[0]);
+      await call('owner_save_flower', {f}); Object.assign(data.flowers.find(x => x.id === f.id), f); render(); toast('Photo updated'); return;
+    }
+    if (el.dataset.order){ await call('owner_set_order_status', {oid: el.dataset.order, st: el.value}); data.orders.find(o => o.id === el.dataset.order).status = el.value; render(); toast('Status updated'); return; }
+    const row = el.closest('.frow');
+    if (row && el.dataset.k){ const f = rowFlower(row); if (!String(f.name).trim()){ toast('A flower needs a name.'); return; } await saveFlower(f, el.dataset.k === 'available' ? (f.available ? 'Showing to customers' : 'Hidden from customers') : 'Saved'); if (el.dataset.k === 'available') render(); return; }
+    const card = el.closest('[data-sid]');
+    if (card && el.dataset.k === 'active'){ el.parentElement.lastChild.textContent = el.checked ? ' Offered (tap Save)' : ' Not offered (tap Save)'; }
+  }catch(err){ if (err && err.message && !/passcode/i.test(err.message)) toast(err.message); }
+});
+
+pass = stored('wl_pass') || '';
+if (pass){ app.innerHTML = '<p class="muted" style="padding-top:20vh;text-align:center">Loading your shop…</p>'; rpc('owner_load', {p: pass}).then(d => { data = d; render(); }).catch(err => { pass = ''; store('wl_pass', null); loginErr = /wrong/i.test(err.message) ? '' : err.message; render(); }); }
+else render();
+})();
+</script>
+</body>
+</html>
